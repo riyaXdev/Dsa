@@ -30,21 +30,24 @@ public:
         while(pq.size() == nums.size()){  //jabtak no of rows ke barabar elements ho heap mei
            auto p = pq.top();
             pq.pop();
-            int val = p.val;
+
+            int mini = p.val;
+
+            // ✅ update answer FIRST
+            if(ans.empty() || maxi - mini < ans[1] - ans[0]){
+                ans = {mini, maxi};
+            }
+
             int es = p.epos;
             int as = p.apos;
-            if(es+1 < nums[as].size()){
-                dataa d1(nums[as][es+1], es+1, as);
-                pq.push(d1);
-                mini = pq.top().val;
-                maxi = max(maxi,nums[as][es+1]);
 
-                //now  check if i have got lesser range than earlier
-                //update the range before inserting next element
-                 if(maxi - mini < ans[1] - ans[0]){
-                    ans[0] = mini;
-                    ans[1] = maxi;
-                }
+            // Step 3: move forward in same list
+            if(es + 1 < nums[as].size()){
+                int nextVal = nums[as][es + 1];
+                pq.push(dataa(nextVal, es + 1, as));
+
+                // ✅ correct indexing
+                maxi = max(maxi, nextVal);
             }
         } 
         return ans;
