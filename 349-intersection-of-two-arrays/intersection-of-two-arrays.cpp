@@ -1,13 +1,13 @@
-class Solution {
+    class Solution {
 public:
     vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
         vector<int>ans;
-        set<int>st;
+        unordered_set<int>st(nums1.begin(),nums1.end());
         for(int i:nums1){
             st.insert(i);
         }
         for(int j:nums2){
-            if(st.contains(j)){
+            if(st.find(j) != st.end()){
                 ans.push_back(j);
                 st.erase(j);
             }
