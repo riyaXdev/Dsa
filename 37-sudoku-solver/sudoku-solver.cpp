@@ -1,40 +1,30 @@
 class Solution {
-bool isSafe(int row,int col,vector<vector<char>>& board,char val ){
-    for(int i=0;i<board.size();i++){
-        if(board[row][i] == val) return false;
-        if(board[i][col]== val) return false;
-        if(board[3*(row/3) + i/3][3*(col/3) + i%3] == val) return false;
-    }
-    return true;
-}
-
-
-bool solve(vector<vector<char>>& board){
-        int n = board.size();
-        for(int row = 0; row<n ;row++){
-            for(int col = 0; col<n ;col++){
-                //check if cell is empty or not
-                if(board[row][col] == '.'){
-                    for(char val = '1'; val<='9' ;val++){
-                        if(isSafe(row,col,board,val)){
-                            board[row][col] = val;
-                            bool aagesolnpossible = solve(board);
-                            if(aagesolnpossible){
+    bool solve(vector<vector<char>>&board){
+        for(int i=0;i<board.size();i++){
+            for(int j=0;j<board[0].size();j++){
+                if(board[i][j] == '.'){
+                    for(char c='1'; c<='9'; c++){ // try for all no from 1 to 9
+                        if(issafe(board,i,j,c) == true){ // only place when it's safe
+                            board[i][j] = c;
+                            if(solve(board) == true){ //if get atleast one answer so stop. do not proceed further
                                 return true;
                             }
-                            else{
-                                //backtrack karo
-                                board[row][col] = '.';
-                            }
+                            else board[i][j] = '.';
                         }
                     }
-                    return false;
-                    
+                    return false; //when not able to place any char in board
                 }
             }
-
         }
-        return true;
+        return true; // when do not get any empty space that means all spaces filled correctly
+    }
+    bool issafe(vector<vector<char>>&board,int row,int col,char c){
+        for(int i=0;i<9;i++){
+            if(board[i][col] == c) return false; // checking for entire col
+            if(board[row][i] == c) return false; // for row
+            if(board[3*(row/3) + i/3][3*(col/3) + i%3] == c) return false;
+        }
+        return true; // if none of the cond true
     }
 public:
     void solveSudoku(vector<vector<char>>& board) {
